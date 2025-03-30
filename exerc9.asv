@@ -1,0 +1,56 @@
+clc; clear; close all;
+
+% Define f(t)
+
+syms f(t)
+
+
+A=3;
+T=7;
+f(t) = mod(t,T)*A/T;
+t_values = linspace(-2*T,2*T,1000);
+
+plot(t_values,f(t_values),"b","Linewidth",3);
+xlabel("Time (t)");
+ylabel("f(t) blue, x(t) red");
+hold on;
+% Find Xk approximation
+
+syms X_approx(k) x_in_period(t) n
+
+N = 10;
+x_in_period(t) = A*t/T;
+X_approx(k) = symsum(x_in_period(n*T/N)*exp(-1i*2*pi*k*n/N),n,0, N-1)/N;
+X_apporx(0)
+
+% Find Xk
+
+syms X(k)
+
+X(k) = A*1i/(2*pi*k);
+Xk_0 = A/2;
+
+% Find x(t) by Xk approximation
+
+syms x_by_Xk_approx(t) x_by_Xk_approx_p(t) x_by_Xk_approx_n(t)
+
+x_by_Xk_approx_p(t) = symsum(X_approx(k)*exp(1i*2*pi*k*t/T),-1000,-1);
+x_by_Xk_approx_n(t) = symsum(X_approx(k)*exp(1i*2*pi*k*t/T),0,1000);
+x_by_Xk_approx(t) = x_by_Xk_approx_p(t) + x_by_Xk_approx_n(t);
+
+% Find x(t) by Xk
+
+syms x_by_Xk(t) 
+
+x_by_Xk(t) = Xk_0 + symsum(X(k)*exp(1i*2*pi*k*t/T),k, 1, Inf) + symsum(X(k)*exp(1i*2*pi*k*t/T),k, -Inf, -1);
+
+
+plot(t_values,vpa(real(x_by_Xk(t_values))),"ro","Linewidth",2);
+figure;
+plot(t_values,vpa(real(x_by_Xk_approx(t_values))),"p:","Linewidth",2);
+
+%{
+ylabel("x(t) by Xk");
+xlabel("Time (t)");
+%}
+% Compare the results using original f(t), x(t)_Xk_approx and x(t)_XK

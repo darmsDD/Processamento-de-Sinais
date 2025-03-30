@@ -1,0 +1,29 @@
+clc; clear; close all;
+
+% Define f(t)
+
+
+
+A=3;
+T=7;
+t_values = linspace(-2*T,2*T,1000);
+
+
+% Find Xk approximation
+
+syms  x_p(k,n)
+
+N = 11;
+K_size = 1000;
+x_in_period(t) = A*t/T;
+x_P = zeros(1,K_size);
+
+x_p(k,n) = piecewise(n>0,x_p(k,n-1) + x_in_period(n * T / N) *exp(-1i*2*pi*k*n/N)/N,x_in_period(n * T / N) *exp(-1i*2*pi*k*n/N)/N);
+
+for k=-K_size:K_size
+    temp = 0;
+    for n=1:N-1
+        x_p(k,n);
+    end
+end
+x_p()
