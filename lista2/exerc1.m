@@ -17,11 +17,20 @@ while N <= limit
     % Find the coefficientes Xk of the Fourier Series
     X_k(k) = (1 - exp(-1))/(1+ 1i*2*pi*k);
     
+
     % Plot the graphs
     figure;
-    stem(n,real(X(n)),'b', 'LineWidth', 2);
+    
+    
+    n_shift=-N/2:N/2-1;
+    Dft_shift = fftshift(X(n));
+    stem(n_shift,abs((Dft_shift)),'b', 'LineWidth', 2);
+    ylabel("abs(Xk or DFT(x))");
+    xlabel("k");
     hold on;
-    stem(n,real(X_k(n)),'r', 'LineWidth', 2);
+    
+    stem(n_shift,abs(X_k(n_shift)),'r', 'LineWidth', 2);
+    %stem(n_shift,real(X_k(n)),"filled", 'LineWidth', 2);
     my_legend = sprintf("DFT with %d points",N);
     legend(my_legend,"Fourier Series");
 
@@ -34,7 +43,7 @@ end
 figure;
 title("Mean squared error");
 hold on;
-xlim([-2,2]);
+xlim([-3,3]);
 
 bar(0,error_array(1,:));
 bar(1,error_array(2,:));
